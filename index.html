@@ -1,1 +1,1032 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LimPeira | Pitch Deck para Investidores</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================================
+           RESET & IDENTIDADE VISUAL LIMPEIRA
+        ========================================================= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Paleta Oficial LimPeira (Extraída do App & Pôster OBT) */
+            --primary: #0A369D;        /* Azul Institucional LimPeira */
+            --primary-dark: #062163;
+            --primary-light: #DBEAFE;
+            --green: #0B6E31;          /* Verde Vegetação / Novo Relato */
+            --green-light: #DCFCE7;
+            --green-mint: #86EFAC;
+            --accent: #F59E0B;         /* Laranja "Peira" / Destaque */
+            --accent-light: #FEF3C7;
+            --danger: #DC2626;         /* Urgência Alta */
+            --bg: #F8FAFC;             /* Fundo Claro Limpo do App */
+            --bg-2: #EFF6FF;
+            --white: #FFFFFF;
+            --ink: #0F172A;            /* Preto/Ardósia para textos e bordas */
+            --muted: #475569;
+            --border-solid: 2px solid #0F172A;
+            --shadow-solid: 4px 4px 0px #0F172A;
+            --shadow-soft: 0 15px 35px rgba(15, 23, 42, 0.08);
+            --radius: 18px;
+            --transition: 0.35s cubic-bezier(.2, .8, .2, 1);
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: "Hanken Grotesk", sans-serif;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .presentation {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: 
+                radial-gradient(circle at 90% 10%, rgba(11, 110, 49, 0.08), transparent 35%),
+                radial-gradient(circle at 10% 90%, rgba(10, 54, 157, 0.08), transparent 35%),
+                var(--bg);
+        }
+
+        .slides {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            padding: clamp(70px, 8vh, 95px) clamp(25px, 6vw, 90px) 95px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(1.015);
+            transition: opacity .45s ease, transform .65s cubic-bezier(.2, .8, .2, 1), visibility .45s ease;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: transparent;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: scale(1);
+            z-index: 2;
+        }
+
+        .slide::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 20px;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            width: min(1120px, 100%);
+            margin-inline: auto;
+        }
+
+        /* Marca D'água / Logo no Canto Superior Esquerdo */
+        .brand-badge {
+            position: fixed;
+            top: 24px;
+            left: 35px;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            border: var(--border-solid);
+            box-shadow: 3px 3px 0px var(--ink);
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-weight: 900;
+            font-size: 1.15rem;
+        }
+
+        .brand-badge i {
+            color: var(--green);
+        }
+
+        .brand-badge .lim { color: var(--ink); }
+        .brand-badge .peira { color: var(--accent); }
+
+        /* Contador Superior Direito */
+        .slide-number {
+            position: absolute;
+            top: 26px;
+            right: 45px;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-weight: 900;
+            user-select: none;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .slide-number .current {
+            color: var(--primary);
+            font-size: 2rem;
+            line-height: 1;
+        }
+        .slide-number .separator {
+            color: #CBD5E1;
+        }
+        .slide-number .total {
+            color: #94A3B8;
+            font-size: 1.05rem;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .title-icon {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            color: var(--white);
+            border-radius: 14px;
+            border: var(--border-solid);
+            box-shadow: 3px 3px 0px var(--ink);
+            background: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .title-icon.green-bg { background: var(--green); }
+        .title-icon.amber-bg { background: var(--accent); color: var(--ink); }
+
+        h1, h2, h3, h4 {
+            font-family: "Bricolage Grotesque", sans-serif;
+            letter-spacing: -.03em;
+        }
+
+        h2 {
+            font-size: clamp(1.9rem, 3.8vw, 2.9rem);
+            line-height: 1.08;
+            font-weight: 900;
+            color: var(--ink);
+        }
+
+        .title-line::after {
+            content: "";
+            display: block;
+            width: 75px;
+            height: 5px;
+            margin-top: 14px;
+            border-radius: 99px;
+            background: linear-gradient(90deg, var(--green), var(--accent));
+        }
+
+        .description {
+            max-width: 920px;
+            margin-bottom: 18px;
+            color: var(--muted);
+            font-size: clamp(1rem, 1.45vw, 1.15rem);
+            line-height: 1.65;
+        }
+
+        .description strong {
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        .text-blue { color: var(--primary); }
+        .text-green { color: var(--green); }
+        .text-amber { color: #D97706; }
+
+        /* Destaques no estilo do App */
+        .highlight {
+            position: relative;
+            max-width: 960px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin: 18px 0;
+            padding: 16px 20px;
+            color: var(--ink);
+            background: var(--primary-light);
+            border: var(--border-solid);
+            box-shadow: var(--shadow-solid);
+            border-radius: 14px;
+            line-height: 1.55;
+            font-size: 0.98rem;
+        }
+
+        .highlight i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        .highlight.green-highlight {
+            background: var(--green-light);
+        }
+        .highlight.green-highlight i {
+            color: var(--green);
+        }
+
+        .highlight.amber-highlight {
+            background: var(--accent-light);
+        }
+        .highlight.amber-highlight i {
+            color: #D97706;
+        }
+
+        /* Grids e Cards estilo Neo-Brutalist do App */
+        .grid {
+            display: grid;
+            width: 100%;
+            gap: 18px;
+            margin: 20px 0;
+        }
+
+        .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+        .card {
+            position: relative;
+            padding: 20px 18px;
+            min-height: 145px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            text-align: left;
+            background: var(--white);
+            border: var(--border-solid);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-solid);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+
+        .card:hover {
+            transform: translate(-2px, -3px);
+            box-shadow: 6px 7px 0px var(--ink);
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 12px;
+            color: var(--white);
+            background: var(--primary);
+            border: 2px solid var(--ink);
+            border-radius: 12px;
+            font-size: 1.15rem;
+        }
+
+        .card-icon.green { background: var(--green); }
+        .card-icon.amber { background: var(--accent); color: var(--ink); }
+        .card-icon.red { background: var(--danger); }
+
+        .card h4 {
+            margin-bottom: 6px;
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .card p {
+            color: var(--muted);
+            font-size: .92rem;
+            line-height: 1.5;
+        }
+
+        .card p strong {
+            color: var(--ink);
+        }
+
+        /* Badge de Preço / Métrica */
+        .price-tag {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 10px;
+            background: var(--green-light);
+            color: var(--green);
+            border: 1.5px solid var(--green);
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.85rem;
+        }
+
+        .price-tag.blue {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* =========================================================
+           SLIDE DE CAPA (ESTILO APP + PÔSTER OBT)
+        ========================================================= */
+        .cover {
+            padding: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(134, 239, 172, 0.35), transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(254, 243, 199, 0.6), transparent 45%),
+                #FFFFFF;
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 5;
+            width: min(980px, 90%);
+            text-align: center;
+            background: var(--white);
+            border: 3px solid var(--ink);
+            box-shadow: 10px 10px 0px var(--ink);
+            border-radius: 28px;
+            padding: clamp(32px, 5vw, 56px);
+        }
+
+        .cover-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: var(--green-light);
+            color: var(--green);
+            border: 2px solid var(--ink);
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 20px;
+        }
+
+        .cover h1 {
+            font-size: clamp(3.2rem, 7.5vw, 5.8rem);
+            line-height: .95;
+            font-weight: 900;
+            color: var(--ink);
+        }
+
+        .cover h1 .peira {
+            color: var(--accent);
+            text-shadow: 2px 2px 0px var(--ink);
+        }
+
+        .cover-subtitle {
+            margin-top: 18px;
+            color: var(--primary);
+            font-size: clamp(1.05rem, 2vw, 1.35rem);
+            font-weight: 800;
+            letter-spacing: .04em;
+        }
+
+        .cover-line {
+            width: 110px;
+            height: 5px;
+            margin: 22px auto;
+            border-radius: 99px;
+            background: linear-gradient(90deg, var(--green), var(--accent));
+        }
+
+        .cover-quote {
+            color: var(--muted);
+            font-size: 1.05rem;
+            max-width: 680px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* =========================================================
+           SLIDE DIVISOR DE SEÇÃO
+        ========================================================= */
+        .section-slide {
+            padding: 40px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, #062163 100%);
+            color: var(--white);
+        }
+
+        .section-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+        }
+
+        .section-icon {
+            width: 88px;
+            height: 88px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 22px;
+            border-radius: 24px;
+            color: var(--ink);
+            background: var(--accent);
+            border: 3px solid var(--ink);
+            box-shadow: 5px 5px 0px var(--ink);
+            font-size: 2.5rem;
+        }
+
+        .section-slide h1 {
+            font-size: clamp(2.5rem, 5.5vw, 4.4rem);
+            line-height: 1;
+            color: var(--white);
+            font-weight: 900;
+        }
+
+        .section-line {
+            width: 85px;
+            height: 5px;
+            margin: 22px 0;
+            border-radius: 99px;
+            background: var(--green-mint);
+        }
+
+        .section-slide p {
+            color: #DBEAFE;
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+
+        /* Tabela de Custos */
+        .cost-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--white);
+            border: var(--border-solid);
+            border-radius: 16px;
+            box-shadow: var(--shadow-solid);
+            overflow: hidden;
+            margin: 18px 0;
+            font-size: 0.95rem;
+        }
+
+        .cost-table th {
+            background: var(--primary);
+            color: var(--white);
+            text-align: left;
+            padding: 13px 16px;
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-weight: 800;
+            border-bottom: var(--border-solid);
+        }
+
+        .cost-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            color: var(--ink);
+        }
+
+        .cost-table tr:last-child td {
+            border-bottom: none;
+            background: var(--green-light);
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        /* =========================================================
+           NAVEGAÇÃO E PROGRESSO
+        ========================================================= */
+        .navigation {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            background: var(--white);
+            border: var(--border-solid);
+            border-radius: 999px;
+            box-shadow: var(--shadow-solid);
+        }
+
+        .nav-btn {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border: 1.5px solid var(--ink);
+            border-radius: 50%;
+            color: var(--ink);
+            background: var(--bg);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            color: var(--white);
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .counter {
+            min-width: 70px;
+            text-align: center;
+            color: var(--muted);
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-weight: 800;
+            font-size: .9rem;
+        }
+
+        .counter-current {
+            color: var(--primary);
+        }
+
+        .progress {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 5px;
+            z-index: 110;
+            background: linear-gradient(90deg, var(--green), var(--primary), var(--accent));
+            transition: width .4s ease;
+        }
+
+        .dots {
+            position: fixed;
+            left: 50%;
+            bottom: 78px;
+            transform: translateX(-50%);
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border: 1.5px solid var(--ink);
+            border-radius: 50%;
+            background: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dot.active {
+            width: 24px;
+            border-radius: 99px;
+            background: var(--accent);
+        }
+
+        .keyboard-help {
+            position: fixed;
+            bottom: 28px;
+            right: 35px;
+            z-index: 50;
+            color: var(--muted);
+            font-size: .75rem;
+            font-weight: 600;
+        }
+
+        .keyboard-help kbd {
+            padding: 2px 6px;
+            border: 1.5px solid var(--ink);
+            border-radius: 5px;
+            background: var(--white);
+            font-family: inherit;
+        }
+
+        /* Animações */
+        .animate {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .slide.active .animate {
+            animation: appear .55s cubic-bezier(.2, .8, .2, 1) forwards;
+        }
+
+        .slide.active .delay-1 { animation-delay: .08s; }
+        .slide.active .delay-2 { animation-delay: .16s; }
+        .slide.active .delay-3 { animation-delay: .24s; }
+        .slide.active .delay-4 { animation-delay: .32s; }
+
+        @keyframes appear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .grid-3, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .keyboard-help, .dots { display: none; }
+        }
+
+        @media (max-width: 650px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .brand-badge { top: 14px; left: 16px; font-size: 1rem; }
+            .slide-number { top: 16px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+    <!-- Logo Fixo no Canto Superior -->
+    <div class="brand-badge">
+        <i class="fa-solid fa-scissors"></i>
+        <span><span class="lim">Lim</span><span class="peira">Peira</span></span>
+    </div>
+
+    <div class="slides" id="slidesContainer">
+
+        <!-- SLIDE 1: CAPA -->
+        <section class="slide cover active">
+            <div class="cover-content">
+                <div class="cover-pill animate">
+                    <i class="fa-solid fa-seedling"></i> Projeto OBT • Zeladoria Urbana Inteligente
+                </div>
+                <h1 class="animate delay-1">Lim<span class="peira">Peira</span></h1>
+                <p class="cover-subtitle animate delay-2">Conectando Cidadãos e Prefeituras no Cuidado Urbano</p>
+                <div class="cover-line animate delay-3"></div>
+                <p class="cover-quote animate delay-4">
+                    Apresentação Executiva & Plano de Escala: Da validação acadêmica na Olimpíada Brasileira de Tecnologia para um produto pronto para o mercado.
+                </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: O PROBLEMA -->
+        <section class="slide content">
+            <div class="slide-number">
+                <span class="current">02</span><span class="separator">/</span><span class="total">07</span>
+            </div>
+            <div class="content-wrapper">
+                <div class="title-row animate">
+                    <div class="title-icon amber-bg"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <h2 class="title-line">O Problema nas Cidades</h2>
+                </div>
+                <p class="description animate delay-1">
+                    O crescimento descontrolado da vegetação em calçadas, praças e terrenos públicos gera impactos diretos na qualidade de vida e onera os cofres públicos por falta de fiscalização ágil.
+                </p>
+
+                <div class="grid grid-3 animate delay-2">
+                    <div class="card">
+                        <div class="card-icon red"><i class="fa-solid fa-bug"></i></div>
+                        <h4>Saúde & Zoonoses</h4>
+                        <p>Mato alto favorece a proliferação de <strong>escorpiões, mosquitos (dengue)</strong> e animais peçonhentos próximos às residências.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon amber"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h4>Insegurança Urbana</h4>
+                        <p>Calçadas obstruídas obrigam pedestres a andar na rua e reduzem a visibilidade em pontos de ônibus e esquinas.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fa-solid fa-phone-slash"></i></div>
+                        <h4>Burocracia na Ouvidoria</h4>
+                        <p>Canais atuais exigem cadastros longos e telefonemas demorados, desestimulando a participação do cidadão.</p>
+                    </div>
+                </div>
+
+                <div class="highlight amber-highlight animate delay-3">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <div><strong>Oportunidade:</strong> Transformar cada morador em um sensor ativo da cidade, entregando dados georreferenciados prontos para a equipe de manutenção agir.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: A SOLUÇÃO (O APP) -->
+        <section class="slide content">
+            <div class="slide-number">
+                <span class="current">03</span><span class="separator">/</span><span class="total">07</span>
+            </div>
+            <div class="content-wrapper">
+                <div class="title-row animate">
+                    <div class="title-icon green-bg"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <h2 class="title-line">A Solução: <span class="text-green">LimPeira</span></h2>
+                </div>
+                <p class="description animate delay-1">
+                    Um aplicativo mobile intuitivo desenhado para eliminar barreiras entre o problema na rua e a ordem de serviço da prefeitura.
+                </p>
+
+                <div class="grid grid-4 animate delay-2">
+                    <div class="card">
+                        <div class="card-icon amber"><i class="fa-solid fa-bolt"></i></div>
+                        <h4>Acesso sem Fricção</h4>
+                        <p>Entrada imediata com apelido ou gerador aleatório. <strong>Zero burocracia</strong> para enviar o primeiro relato.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon green"><i class="fa-solid fa-camera"></i></div>
+                        <h4>Foto + GPS Exato</h4>
+                        <p>Registro fotográfico com captura automática de endereço, coordenadas e <strong>nível de urgência</strong> (Baixa, Média, Alta).</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <h4>Mapa & Protocolos</h4>
+                        <p>Cada envio gera um protocolo único (<code>#LP</code>) acompanhável no feed da comunidade e no mapa interativo.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fa-solid fa-building-columns"></i></div>
+                        <h4>Painel Prefeitura</h4>
+                        <p>Acesso dedicado para gestores filtrarem demandas críticas, roteirizarem equipes e comprovarem a limpeza.</p>
+                    </div>
+                </div>
+
+                <div class="highlight green-highlight animate delay-3">
+                    <i class="fa-solid fa-check-circle"></i>
+                    <div><strong>Validação Atual:</strong> Protótipo funcional desenvolvido e aprovado na <strong>OBT (Olimpíada Brasileira de Tecnologia)</strong>, alinhado aos ODS 3, 11 e 17 da ONU.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: TRANSIÇÃO PARA ENGENHARIA -->
+        <section class="slide section-slide">
+            <div class="slide-number">
+                <span class="current" style="color: var(--accent);">04</span><span class="separator">/</span><span class="total">07</span>
+            </div>
+            <div class="section-content">
+                <div class="section-icon animate"><i class="fa-solid fa-code-branch"></i></div>
+                <h1 class="animate delay-1">Do Protótipo à Escala</h1>
+                <div class="section-line animate delay-2"></div>
+                <p class="animate delay-3">
+                    Por que precisamos refatorar a tecnologia atual para suportar milhares de usuários e contratos públicos.
+                </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: ARQUITETURA E REFATORAÇÃO -->
+        <section class="slide content">
+            <div class="slide-number">
+                <span class="current">05</span><span class="separator">/</span><span class="total">07</span>
+            </div>
+            <div class="content-wrapper">
+                <div class="title-row animate">
+                    <div class="title-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <h2 class="title-line">Nova Stack Tecnológica</h2>
+                </div>
+                <p class="description animate delay-1">
+                    O protótipo atual cumpriu seu papel de validação visual e de fluxo. Com a aprovação, reescreveremos o sistema em <strong>arquitetura de produção</strong> para garantir segurança, velocidade e publicação oficial nas lojas.
+                </p>
+
+                <div class="grid grid-3 animate delay-2">
+                    <div class="card">
+                        <div class="card-icon"><i class="fa-brands fa-flutter"></i></div>
+                        <h4>Front-end: Flutter / React Native</h4>
+                        <p>Código único nativo para <strong>Android e iOS</strong>, com acesso otimizado à câmera, GPS em segundo plano e funcionamento fluido.</p>
+                        <span class="price-tag blue">Mobile Multiplataforma</span>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon green"><i class="fa-solid fa-server"></i></div>
+                        <h4>Back-end & Banco de Dados</h4>
+                        <p>API robusta em <strong>Node.js + PostgreSQL (PostGIS)</strong> para consultas geográficas rápidas e prevenção de chamados duplicados.</p>
+                        <span class="price-tag">Alta Disponibilidade</span>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon amber"><i class="fa-solid fa-robot"></i></div>
+                        <h4>Moderação & Painel Web</h4>
+                        <p>Dashboard web para a prefeitura gerenciar equipes e filtro inteligente para bloquear fotos inválidas ou spam.</p>
+                        <span class="price-tag blue">Gestão B2G</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: ANÁLISE DE GASTOS E INFRAESTRUTURA -->
+        <section class="slide content">
+            <div class="slide-number">
+                <span class="current">06</span><span class="separator">/</span><span class="total">07</span>
+            </div>
+            <div class="content-wrapper">
+                <div class="title-row animate">
+                    <div class="title-icon green-bg"><i class="fa-solid fa-coins"></i></div>
+                    <h2 class="title-line">Orçamento & Infraestrutura</h2>
+                </div>
+                <p class="description animate delay-1">
+                    Levantamento transparente dos custos operacionais e de publicação necessários para colocar o aplicativo no ar com estabilidade.
+                </p>
+
+                <table class="cost-table animate delay-2">
+                    <thead>
+                        <tr>
+                            <th>Item / Serviço</th>
+                            <th>Finalidade Técnica</th>
+                            <th>Tipo</th>
+                            <th>Estimativa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Servidor VPS + Storage</strong> (AWS / DigitalOcean)</td>
+                            <td>Hospedagem da API, banco de dados e armazenamento das fotos dos relatos</td>
+                            <td>Mensal</td>
+                            <td>R$ 180 – R$ 350/mês</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Google Play Console</strong></td>
+                            <td>Conta oficial de desenvolvedor para publicação na loja Android</td>
+                            <td>Taxa Única</td>
+                            <td>US$ 25 (~R$ 145)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Apple Developer Program</strong></td>
+                            <td>Conta oficial para publicação na App Store (iOS)</td>
+                            <td>Anual</td>
+                            <td>US$ 99 (~R$ 570/ano)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>API de Mapas & Geolocalização</strong></td>
+                            <td>Geocodificação reversa (coordenada → endereço) e mapas interativos</td>
+                            <td>Mensal</td>
+                            <td>R$ 0 – R$ 200/mês*</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Domínio & SSL (.com.br)</strong></td>
+                            <td>Painel administrativo web da prefeitura e landing page</td>
+                            <td>Anual</td>
+                            <td>R$ 40/ano</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>Custo Operacional Fixo Inicial (Infraestrutura + Lojas no 1º Ano)</strong></td>
+                            <td><strong>~R$ 3.500 a R$ 5.500 / ano</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="font-size: 0.82rem; color: var(--muted); margin-top: 6px;" class="animate delay-3">
+                    *Nota: APIs como Google Maps oferecem US$ 200 de crédito gratuito mensal, cobrindo toda a fase inicial de operação municipal. Valores não incluem horas de desenvolvimento caso haja contratação externa.
+                </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 7: MODELO DE NEGÓCIO & PRÓXIMOS PASSOS -->
+        <section class="slide content">
+            <div class="slide-number">
+                <span class="current">07</span><span class="separator">/</span><span class="total">07</span>
+            </div>
+            <div class="content-wrapper">
+                <div class="title-row animate">
+                    <div class="title-icon amber-bg"><i class="fa-solid fa-handshake"></i></div>
+                    <h2 class="title-line">Modelo de Negócio & Aprovação</h2>
+                </div>
+                <p class="description animate delay-1">
+                    O LimPeira é escalável para qualquer município brasileiro no modelo <strong>SaaS B2G (Business to Government)</strong>, gerando economia operacional para as prefeituras.
+                </p>
+
+                <div class="grid grid-2 animate delay-2">
+                    <div class="card">
+                        <div class="card-icon green"><i class="fa-solid fa-chart-line"></i></div>
+                        <h4>Como o Projeto se Sustenta</h4>
+                        <p>
+                            • <strong>Licenciamento Municipal:</strong> Assinatura mensal para prefeituras e secretarias de obras/meio ambiente.<br>
+                            • <strong>Cidade Piloto (Limeira):</strong> Implantação inicial para validação de métricas reais e redução de custos de rondas.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fa-solid fa-rocket"></i></div>
+                        <h4>Roadmap Pós-Aprovação (90 Dias)</h4>
+                        <p>
+                            • <strong>Mês 1:</strong> Refatoração do código na nova linguagem e setup da VPS.<br>
+                            • <strong>Mês 2:</strong> Testes fechados com moradores e painel da prefeitura.<br>
+                            • <strong>Mês 3:</strong> Publicação oficial na Play Store e App Store.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="highlight animate delay-3">
+                    <i class="fa-solid fa-star"></i>
+                    <div><strong>Nosso Pedido:</strong> Buscamos aprovação e aporte inicial para custear a infraestrutura em nuvem, registros nas lojas e o ciclo de desenvolvimento da versão 1.0 comercial.</div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Indicadores (Dots) -->
+    <div class="dots" id="dotsContainer"></div>
+
+    <!-- Barra de Navegação Inferior -->
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" title="Slide Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="counter">
+            <span class="counter-current" id="navCurrent">01</span> / <span id="navTotal">07</span>
+        </div>
+        <button class="nav-btn" id="nextBtn" title="Próximo Slide"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Dica de Teclado -->
+    <div class="keyboard-help">
+        Use <kbd>←</kbd> <kbd>→</kbd> ou <kbd>Espaço</kbd> para navegar
+    </div>
+
+    <!-- Barra de Progresso -->
+    <div class="progress" id="progressBar"></div>
+</div>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const navCurrent = document.getElementById('navCurrent');
+    const navTotal = document.getElementById('navTotal');
+    const progressBar = document.getElementById('progressBar');
+    const dotsContainer = document.getElementById('dotsContainer');
+
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+
+    // Inicializa contadores e bolinhas de navegação
+    navTotal.textContent = String(totalSlides).padStart(2, '0');
+
+    slides.forEach((_, idx) => {
+        const dot = document.createElement('button');
+        dot.classList.add('dot');
+        if (idx === 0) dot.classList.add('active');
+        dot.setAttribute('aria-label', `Ir para slide ${idx + 1}`);
+        dot.addEventListener('click', () => goToSlide(idx));
+        dotsContainer.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll('.dot');
+
+    function updatePresentation() {
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === currentIndex);
+        });
+
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+        });
+
+        navCurrent.textContent = String(currentIndex + 1).padStart(2, '0');
+        const progressPercent = ((currentIndex + 1) / totalSlides) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+    }
+
+    function goToSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= totalSlides) index = totalSlides - 1;
+        currentIndex = index;
+        updatePresentation();
+    }
+
+    prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+    nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+            e.preventDefault();
+            goToSlide(currentIndex + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            e.preventDefault();
+            goToSlide(currentIndex - 1);
+        } else if (e.key === 'Home') {
+            goToSlide(0);
+        } else if (e.key === 'End') {
+            goToSlide(totalSlides - 1);
+        }
+    });
+
+    updatePresentation();
+</script>
+
+</body>
+</html>
